@@ -12,6 +12,19 @@ export enum MetadataKey {
   EditionMarker = 7,
 }
 
+export class Collection {
+  verified: boolean;
+  key: StringPublicKey;
+
+  constructor(args: {
+    verified: boolean;
+    key: StringPublicKey;
+  }) {
+    this.verified = args.verified;
+    this.key = args.key
+  }
+}
+
 export class Creator {
   address: StringPublicKey;
   verified: boolean;
@@ -70,12 +83,14 @@ export class Data {
     uri: string;
     sellerFeeBasisPoints: number;
     creators: Creator[] | null;
+    collection: Collection | null;
   }) {
     this.name = args.name;
     this.symbol = args.symbol;
     this.uri = args.uri;
     this.sellerFeeBasisPoints = args.sellerFeeBasisPoints;
     this.creators = args.creators;
+    this.collection = args.collection;
   }
 }
 
@@ -90,6 +105,7 @@ const METADATA_SCHEMA = new Map<any, any>([
         ["uri", "string"],
         ["sellerFeeBasisPoints", "u16"],
         ["creators", { kind: "option", type: [Creator] }],
+        ["collection", {king: "option", type: Collection}]
       ],
     },
   ],
@@ -115,6 +131,16 @@ const METADATA_SCHEMA = new Map<any, any>([
         ["address", "pubkey"],
         ["verified", "u8"],
         ["share", "u8"],
+      ],
+    },
+  ],
+  [
+    Collection,
+    {
+      kind: "struct",
+      fields: [
+        ["verified", "u8"],
+        ["key", "pubkey"],
       ],
     },
   ],
